@@ -191,5 +191,64 @@
             <a href="https://modrinth.com/modpack/all-skyblock" class="project-button" target="_blank">View on Modrinth</a>
         </div>
     </div>
+        <script>
+async function updateLastUpdatedDate() {
+    try {
+        const response = await fetch('https://api.modrinth.com/v2/project/HMm5nRel/version');
+        const versions = await response.json();
+        if (versions.length > 0) {
+            const latestVersion = versions[0];
+            const date = new Date(latestVersion.date_published);
+            const formattedDate = date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            // Find the "Last Updated" stat and update it
+            const statItems = document.querySelectorAll('.stat-item');
+            statItems.forEach(item => {
+                if (item.innerText.includes("Last Updated")) {
+                    const statValue = item.querySelector('.stat-value');
+                    if (statValue) {
+                        statValue.textContent = formattedDate;
+                    }
+                }
+            });
+        }
+    } catch (error) {
+        console.error("Failed to fetch Modrinth data:", error);
+    }
+}
+
+updateLastUpdatedDate();
+</script>
+
+        <script>
+async function updateDownloadCount() {
+    try {
+        const response = await fetch('https://api.modrinth.com/v2/project/HMm5nRel');
+        const data = await response.json();
+
+        const downloads = data.downloads.toLocaleString('en-US');
+
+        // Find the "Downloads" stat and update it
+        const statItems = document.querySelectorAll('.stat-item');
+        statItems.forEach(item => {
+            if (item.innerText.includes("Downloads")) {
+                const statValue = item.querySelector('.stat-value');
+                if (statValue) {
+                    statValue.textContent = downloads;
+                }
+            }
+        });
+    } catch (error) {
+        console.error("Failed to fetch download count:", error);
+    }
+}
+
+updateDownloadCount();
+</script>
+
 </body>
 </html>
